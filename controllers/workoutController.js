@@ -3,37 +3,77 @@
 
 // Imports
 const asyncHandler = require('express-async-handler');
+const Workout = require('../model/workoutModel.js');
 
 // @desc Get workouts
 // @route GET /api/workouts
 // @access Private
 const getWorkouts = asyncHandler(async (req, res) => {
-    res.status(200).json({msg: 'Get workouts'});
+    // Find all workouts
+    const workouts = await Workout.find();
+
+    // Output list of workouts
+    res.status(200).json(workouts); 
 })
 
 // @desc Create a workout
 // @route POST /api/workouts
 // @access Private
 const setWorkout = asyncHandler(async (req, res) => {
-    if(!req.body.text){
+    // Check if body includes a title
+    if(!req.body.title){
         res.status(400);
-        throw new Error('Please add a text field');
+        throw new Error('Please add a title field');
     }
-    res.status(201).json({msg: 'Create workout'});
+
+    // Create new workout with given req data
+    const workout = await Workout.create({
+        title: req.body.title,
+        duration: req.body.duration,
+        exercises: req.body.exercises
+    })
+
+    // Output new workout
+    res.status(201).json(workout);
 })
 
 // @desc Update a workout with id
 // @route PUT /api/workouts/:id
 // @access Private
 const updateWorkout = asyncHandler(async (req, res) => {
-    res.status(200).json({msg: `Update workout with id: ${req.params.id}`});
+    // Find workout with given id
+    const workout = Workout.findById(req.params.id);
+
+    // Check if workout with given id exists
+    if (!workout){
+        res.status(400);
+        throw new Error(`Workout with the id: ${req.params.id} was not found`);
+    }
+    
+    // Update workout with given id with new data
+    const updatedWorkout = await Workout.findByIdAndUpdate(req.params.id, req.body, {new: true});
+
+    // Output updated workout
+    res.status(200).json(updatedWorkout);
 })
 
 // @desc Get workouts
 // @route DELETE /api/workouts
 // @access Private
 const deleteWorkout = asyncHandler(async (req, res) => {
-    res.status(200).json({msg: `Delete workout with id: ${req.params.id}`});
+    // Find workout with given id
+    const workout = await Workout.findById(req.params.id);
+
+    // Check if workout with given id exists
+    if (!workout) {
+        res.status(400);
+        throw new Error(`Workout with the id: ${req.params.id} was not found`)
+    }
+
+    // Delete workout with given id
+    await workout.deleteOne();
+
+    res.status(200).json(`The workout with id: ${req.params.id}`);
 })
 
 
