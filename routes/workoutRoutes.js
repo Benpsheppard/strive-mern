@@ -1,31 +1,19 @@
 // workoutRoutes.js
 // File to handle workout routes
 
-// ImportsS
+// Imports
 const express = require('express');  // import expres
+const { 
+    getWorkouts, setWorkout, 
+    updateWorkout, deleteWorkout 
+} = require('../controllers/workoutController.js');    // import workout controllers for CRUD functionality
 
 // Initialise router
 const router = express.Router();
 
-// GET route
-router.get('/', (req, res) => {
-    res.status(200).json({msg: 'Get workouts'});
-})
-
-// POST route
-router.post('/', (req, res) => {
-    res.status(200).json({msg: 'Create workouts'});
-})
-
-// PUT route
-router.put('/', (req, res) => {
-    res.status(200).json({msg: 'Update workouts'});
-})
-
-// DELETE route
-router.delete('/', (req, res) => {
-    res.status(200).json({msg: 'Delete workouts'});
-})
+// Get, Post, Put and Delete routes
+router.route('/').get(getWorkouts).post(setWorkout);    // routes for getting and setting workouts at '/'
+router.route('/:id').put(updateWorkout).delete(deleteWorkout);      // routes for updating and deleting workouts at '/:id'
 
 // Export router
-module.exports = router;
+module.exports = { router };
