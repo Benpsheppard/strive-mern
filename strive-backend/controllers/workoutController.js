@@ -3,14 +3,15 @@
 
 // Imports
 const asyncHandler = require('express-async-handler');  // Import asyncHandler
-const Workout = require('../model/workoutModel.js');    // Import workout schema model
+const Workout = require('../models/workoutModel.js');    // Import workout schema model
+const User = require('../models/userModel.js');  // Import user schema model
 
 // @desc    Get workouts
 // @route   GET /api/workouts
 // @access  Private
 const getWorkouts = asyncHandler(async (req, res) => {
-    // Find all workouts
-    const workouts = await Workout.find();
+    // Find workouts for specific user
+    const workouts = await Workout.find({ user: req.user.id });
 
     // Output list of workouts
     res.status(200).json(workouts); 
@@ -28,6 +29,7 @@ const setWorkout = asyncHandler(async (req, res) => {
 
     // Create new workout with given req data
     const workout = await Workout.create({
+        user: req.user.id,
         title: req.body.title,
         duration: req.body.duration,
         exercises: req.body.exercises
@@ -42,12 +44,27 @@ const setWorkout = asyncHandler(async (req, res) => {
 // @access  Private
 const updateWorkout = asyncHandler(async (req, res) => {
     // Find workout with given id
-    const workout = Workout.findById(req.params.id);
+    const workout = await Workout.findById(req.params.id);
 
     // Check if workout with given id exists
     if (!workout){
         res.status(400);
         throw new Error(`Workout with the id: ${req.params.id} was not found`);
+    }
+
+    // Logged in user
+    const user = await User.findById(req.user.id);
+
+    // Check user exists
+    if (!user) {
+        res.status(401);
+        throw new Error('User not found');
+    }
+
+    // Check that logged in user matches workout user/owner 
+    if (workout.user.toString() !== user.id){
+        res.status(401);
+        throw new Error('User not authorised');
     }
     
     // Update workout with given id with new data
@@ -70,10 +87,25 @@ const deleteWorkout = asyncHandler(async (req, res) => {
         throw new Error(`Workout with the id: ${req.params.id} was not found`)
     }
 
+    // Logged in user
+    const user = await User.findById(req.user.id);
+
+    // Check user exists
+    if (!user) {
+        res.status(401);
+        throw new Error('User not found');
+    }
+
+    // Check that logged in user matches workout user/owner 
+    if (workout.user.toString() !== user.id){
+        res.status(401);
+        throw new Error('User not authorised');
+    }
+
     // Delete workout with given id
     await workout.deleteOne();
 
-    res.status(200).json(`The workout with id: ${req.params.id}`);
+    res.status(200).json(`The workout with id: ${req.params.id} was deleted`);
 })
 
 // Export functions
