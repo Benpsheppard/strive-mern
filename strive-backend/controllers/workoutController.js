@@ -1,13 +1,13 @@
 // workoutController.js
-// File to create, read, update and delete workouts
+// File to handle workout functionality
 
 // Imports
-const asyncHandler = require('express-async-handler');
-const Workout = require('../model/workoutModel.js');
+const asyncHandler = require('express-async-handler');  // Import asyncHandler
+const Workout = require('../model/workoutModel.js');    // Import workout schema model
 
-// @desc Get workouts
-// @route GET /api/workouts
-// @access Private
+// @desc    Get workouts
+// @route   GET /api/workouts
+// @access  Private
 const getWorkouts = asyncHandler(async (req, res) => {
     // Find all workouts
     const workouts = await Workout.find();
@@ -16,9 +16,9 @@ const getWorkouts = asyncHandler(async (req, res) => {
     res.status(200).json(workouts); 
 })
 
-// @desc Create a workout
-// @route POST /api/workouts
-// @access Private
+// @desc    Create a workout
+// @route   POST /api/workouts
+// @access  Private
 const setWorkout = asyncHandler(async (req, res) => {
     // Check if body includes a title
     if(!req.body.title){
@@ -37,9 +37,9 @@ const setWorkout = asyncHandler(async (req, res) => {
     res.status(201).json(workout);
 })
 
-// @desc Update a workout with id
-// @route PUT /api/workouts/:id
-// @access Private
+// @desc    Update a workout with id
+// @route   PUT /api/workouts/:id
+// @access  Private
 const updateWorkout = asyncHandler(async (req, res) => {
     // Find workout with given id
     const workout = Workout.findById(req.params.id);
@@ -57,9 +57,9 @@ const updateWorkout = asyncHandler(async (req, res) => {
     res.status(200).json(updatedWorkout);
 })
 
-// @desc Get workouts
-// @route DELETE /api/workouts
-// @access Private
+// @desc    Get workouts
+// @route   DELETE /api/workouts
+// @access  Private
 const deleteWorkout = asyncHandler(async (req, res) => {
     // Find workout with given id
     const workout = await Workout.findById(req.params.id);
@@ -76,5 +76,5 @@ const deleteWorkout = asyncHandler(async (req, res) => {
     res.status(200).json(`The workout with id: ${req.params.id}`);
 })
 
-
+// Export functions
 module.exports = { getWorkouts, setWorkout, updateWorkout, deleteWorkout };
