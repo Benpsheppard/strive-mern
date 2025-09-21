@@ -4,7 +4,7 @@
 // Imports
 const jwt = require('jsonwebtoken');    // Import JWT for token usage
 const asyncHandler = require('express-async-handler');      // Import asyncHandler
-const User = require('../model/userModel.js');      // Import user schema model 
+const User = require('../models/userModel.js');      // Import user schema model 
 
 // Function to protect routes
 const protect = asyncHandler(async (req, res, next) => {

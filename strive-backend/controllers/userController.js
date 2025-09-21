@@ -3,7 +3,7 @@
 
 // Imports
 const asyncHandler = require('express-async-handler');    // Import asyncHandler
-const User = require('../model/userModel.js');      // Import user schema model 
+const User = require('../models/userModel.js');      // Import user schema model 
 const jwt = require('jsonwebtoken');    // Import JWT for authentication
 const bcrypt = require('bcryptjs');     // Import bcrypt for hashing passwords
 
@@ -76,8 +76,6 @@ const loginUser = asyncHandler(async (req, res) => {
         res.status(400);
         throw new Error('Invalid user credentials');
     }
-    
-    res.json({msg: "Login user"});
 });
 
 // @desc    Register user
