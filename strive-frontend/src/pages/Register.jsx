@@ -3,9 +3,35 @@
 
 // Imports
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react'; 
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { register, reset } from '../features/auth/authSlice.js';
 
-// Register
 const Register = () => {
+    const [formData, setFormData] = useState({
+        name: '',
+        username: '',
+        email: '',
+        password: '',
+        password2: ''
+    })
+
+    const { email, username, password, password2 } = formData; 
+
+    const onChange = (e) => {
+        setFormData((prevState) => ({
+            ...prevState,
+            [e.target.name]: e.target.value
+        }))
+    }
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+    }
+
+
     return (
         <div className="flex min-h-screen items-center justify-center bg-[#2B2D42] px-4">
             <div className="w-full max-w-md rounded-2xl bg-[#8D99AE] p-8 shadow-lg">
@@ -16,7 +42,7 @@ const Register = () => {
                 </h1>
 
                 {/* Form */}
-                <form className="space-y-4">
+                <form onSubmit={onSubmit} className="space-y-4">
                     <h2 className="mb-2 text-center text-xl font-semibold text-[#EDF2F4]">
                         - Register -
                     </h2>
@@ -27,6 +53,9 @@ const Register = () => {
                         required
                         placeholder="Email@gmail.com"
                         className="w-full rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                        name="email"
+                        value={email}
+                        onChange={onChange}
                     />
 
                     <input
@@ -35,6 +64,9 @@ const Register = () => {
                         required
                         placeholder="Username"
                         className="w-full rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                        name="username"
+                        value={username}
+                        onChange={onChange}
                     />
 
                     <input
@@ -43,6 +75,20 @@ const Register = () => {
                         required
                         placeholder="Password"
                         className="w-full rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                        name="password"
+                        value={password}
+                        onChange={onChange}
+                    />
+
+                    <input
+                        type="password"
+                        id="password2"
+                        required
+                        placeholder="Confirm Password"
+                        className="w-full rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                        name="password2"
+                        value={password2}
+                        onChange={onChange}
                     />
 
                     <p className="text-center text-sm text-[#EDF2F4]">
