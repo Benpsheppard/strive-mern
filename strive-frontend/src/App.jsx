@@ -3,6 +3,8 @@
 
 // Imports
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';   // Import router functions
+import { ToastContainer } from 'react-toastify';  // Import toast container
+import 'react-toastify/dist/ReactToastify.css';   // Import toast css
 import Dashboard from './pages/Dashboard.jsx';    // Import Dashboard page
 import Login from './pages/Login.jsx';    // Import Login page
 import Register from './pages/Register.jsx';    // Import Register page
@@ -30,6 +32,7 @@ const App = () => {
           </Routes>
         </div>
       </Router>
+      <ToastContainer />
     </>
   )
 };
