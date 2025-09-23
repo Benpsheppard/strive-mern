@@ -12,6 +12,7 @@ import NewWorkout from './pages/NewWorkout.jsx';    // Import New Workout page
 import PrevWorkouts from './pages/PrevWorkouts.jsx';    // Import Previous Workouts page
 import Progress from './pages/Progress.jsx';    // Import Progress page
 import Contact from './pages/Contact.jsx';    // Import Contact page
+import Profile from './pages/Profile.jsx';    // Import Profile page
 
 // App
 const App = () => {
@@ -29,6 +30,7 @@ const App = () => {
             <Route path='/prev-workouts' element={<PrevWorkouts />} />
             <Route path='/progress' element={<Progress />} />
             <Route path='/contact' element={<Contact />} />
+            <Route path='/profile' element={<Profile />} />
           </Routes>
         </div>
       </Router>

@@ -1,0 +1,43 @@
+// Profile.jsx
+
+// Imports
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout, reset } from '../features/auth/authSlice.js';
+import Header from '../components/Header.jsx';
+
+const Profile = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.auth);
+
+    const onLogout = () => {
+        dispatch(logout());
+        dispatch(reset());
+        navigate('/');
+    }
+
+    return (
+        <>
+            <Header />
+            <div className="container bg-[#8D99AE] mx-auto px-6 py-10">
+                <h1 className="text-3xl text-center mt-25 font-bold text-[#2B2D42] mb-6">Profile</h1>
+
+                <div className="bg-[#EDF2F4] mx-auto item-center text-center shadow-md rounded-xl p-6 max-w-md">
+                    <p className="text-lg mb-2">
+                        <span className="font-semibold">Username:</span> {user.username}
+                    </p>
+                    <p className="text-lg mb-6">
+                        <span className="font-semibold">Email:</span> {user.email}
+                    </p>
+
+                    <button onClick={onLogout} className="bg-[#EF233C] text-white px-4 py-2 rounded-lg hover:bg-[#D90429] transition-colors">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </>
+    );
+};
+
+export default Profile;
