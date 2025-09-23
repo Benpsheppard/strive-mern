@@ -4,16 +4,45 @@
 // Imports
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react'; 
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { login, reset } from '../features/auth/authSlice.js';
 
 // Login
 const Login = () => {
+    // Setting fields to blank
     const [formData, setFormData] = useState({
         username: '',
         password: ''
     })
 
+    // Getting user data from form
     const { username, password } = formData; 
 
+    // Nav and Dispatch initialisation
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);    // Destructure current state
+
+    useEffect(() => {
+        // Output error
+        if (isError) {
+            toast.error(message);
+        }
+
+        // Navigate user to dashboard
+        if (isSuccess || user) {
+            navigate('/');
+        }
+
+        // Reset state to normal
+        dispatch(reset());
+
+    }, [user, isError, isSuccess, message, navigate, dispatch]);
+
+    // When input fields change
     const onChange = (e) => {
         setFormData((prevState) => ({
             ...prevState,
@@ -21,9 +50,18 @@ const Login = () => {
         }))
     }
 
+    // When form is submitted
     const onSubmit = (e) => {
         e.preventDefault();
+
+        const userData = {
+            username,
+            password
+        };
+
+        dispatch(login(userData));
     }
+
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-[#2B2D42] px-4">
