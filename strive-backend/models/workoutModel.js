@@ -4,6 +4,38 @@
 // Imports
 const mongoose = require('mongoose');   // import mongoose
 
+// Exercise Schema
+const exercisesSchema = mongoose.Schema({
+    // Name
+    name: {
+        type: String,
+        required: [true, 'Please add an exercise name']
+    },
+    // Muscle Group
+    musclegroup: {
+        type: String,
+        enum: [
+            'Chest', 'Back', 'Shoulders',
+            'Arms', 'Legs', 'Core', 
+            'Full body', 'Other'
+        ],
+        default: 'Other',
+        required: [true, 'Please add a muscle group e.g. Chest']
+    },
+    // Description
+    description: {
+        type: String
+    },
+    sets: [
+        {
+            weight: { type: Number, required: [true, 'Please add a weight value'] },
+            reps: { type: Number, required: [true, 'Please add a reps value'] }
+        }
+    ] 
+}, {
+    timestamps: true
+});
+
 // Workout Schema
 const workoutSchema = mongoose.Schema({
     // User
@@ -24,23 +56,11 @@ const workoutSchema = mongoose.Schema({
     },
     // Duration
     duration: {
-        type: Number
+        type: Number,
+        required: [true, 'Timer error']
     },
     // Exercises
-    exercises: [
-        {
-            exercise: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Exercise",
-                required: true
-            },
-            sets: [
-                {
-                    weight: { type: Number }, reps: { type: Number }
-                }
-            ]
-        }
-    ]
+    exercises: [exercisesSchema]
 }, {
     timestamps: true
 });
