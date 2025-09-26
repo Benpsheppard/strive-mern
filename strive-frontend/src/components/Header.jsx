@@ -12,7 +12,7 @@ const Header = () => {
     const user = storedUser ? JSON.parse(storedUser) : null;
 
     return (
-        <header className="header fixed left-0 w-full bg-[#2B2D42] backdrop-blur-md text-[#EDF2F4] shadow-[0_8px_30px_rgba(0,0,0,0.5)] z-100">
+        <header className="header fixed top-0 left-0 w-full bg-[#2B2D42] backdrop-blur-md text-[#EDF2F4] shadow-[0_8px_30px_rgba(0,0,0,0.5)] z-100">
             <div className="container mx-auto flex items-center justify-between px-6 py-4">
                 
                 {/* Logo / Title */}
@@ -47,7 +47,7 @@ const Header = () => {
                         </li>
                         <li>
                             {user ? (
-                                <Link to='/profile' className="text-[#EF233C] hover:text-[#D90429] transition-colors transition hover:scale-105">
+                                <Link to='/profile' className="text-[#EF233C] hover:text-[#D90429] inline-block transform transition duration-200 hover:scale-110">
                                     {user.username}
                                 </Link>
                             ) : (
