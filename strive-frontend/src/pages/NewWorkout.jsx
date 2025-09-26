@@ -1,20 +1,195 @@
-// NewWorkout.jsx
-// File to hold NewWorkout page layout and functionality
+// NewWorkout
 
 // Imports
-import Header from '../components/Header.jsx';   // Import header
+import { useState } from 'react';
+import Header from '../components/Header.jsx';
+import { FaPlus } from 'react-icons/fa';
+import { createWorkout, reset } from '../features/workouts/workoutsSlice.js';
+import { useDispatch } from 'react-redux';
 
-// NewWorkout
+//New Workout
 const NewWorkout = () => {
+    // Initialise dispatch
+    const dispatch = useDispatch();
+
+    // Set initial state of input fields
+    const [title, setTitle] = useState('');
+    const [exercises, setExercises] = useState([]);
+    const [currentExercise, setCurrentExercise] = useState({
+        name: '',
+        musclegroup: '',
+        description: '',
+        sets: []
+    });
+    const [currentSet, setCurrentSet] = useState({ weight: '', reps: '' });
+    const [started, setStarted] = useState(false);
+    const [startTime, setStartTime] = useState(null);
+
+    // Change input for exercise fields
+    const handleExerciseChange = (e) => {
+        setCurrentExercise(prev => ({
+            ...prev,
+            [e.target.name]: e.target.value
+        }));
+    };
+
+    // Change input for set fields
+    const handleSetChange = (e) => {
+        setCurrentSet(prev => ({
+            ...prev,
+            [e.target.name]: e.target.value
+        }));
+    };
+
+    // Add set to current exercise
+    const addSet = () => {
+        if (!currentSet.weight || !currentSet.reps) return;
+        setCurrentExercise(prev => ({
+            ...prev,
+            sets: [...prev.sets, { weight: Number(currentSet.weight), reps: Number(currentSet.reps) }]
+        }));
+        setCurrentSet({ weight: '', reps: '' });
+    };
+
+    // Add exercise to workout
+    const addExercise = () => {
+        if (!currentExercise.name || currentExercise.sets.length === 0) return;
+        setExercises(prev => [...prev, currentExercise]);
+        setCurrentExercise({ name: '', musclegroup: '', description: '', sets: [] });
+    };
+
+    // Submit workout
+    const onSubmit = () => {
+        const endTime = Date.now();
+        const durationMinutes = Math.round((endTime - startTime) / 60000); // duration in minutes
+
+        const workoutData = { title, exercises, duration: durationMinutes };
+        dispatch(createWorkout(workoutData));
+
+        // Reset
+        setTitle('');
+        setExercises([]);
+        setCurrentExercise({ name: '', musclegroup: '', description: '', sets: [] });
+        setCurrentSet({ weight: '', reps: '' });
+        setStarted(false);
+        setStartTime(null);
+    };
+
+    // Start workout
+    const startWorkout = () => {
+        setStarted(true);
+        setStartTime(Date.now());
+    };
+
     return (
-        <>
+        <section className="bg-[#2B2D42] min-h-screen flex flex-col items-center justify-center">
             <Header />
-            <div>
-                <h1>NewWorkout</h1>
-            </div>
-        </>
+            <section>
+                <div className="p-4 max-w-lg mx-auto mt-25 bg-[#8D99AE] shadow rounded-2xl mt-10">
+                    {!started ? (
+                    <button onClick={startWorkout} className="w-full bg-[#EF233C] text-[#EDF2F4] py-2 px-4 rounded-xl hover:bg-[#D90429]">
+                        Start Workout
+                    </button>
+                    ) : (
+                    <>
+                        <h1 className="new-workout text-3xl text-center text-[#EDF2F4] mb-5">
+                             - New <span className="text-[#EF233C]">Workout</span> -
+                        </h1>
+                        <input
+                            type="text"
+                            value={title}
+                            onChange={e => setTitle(e.target.value)}
+                            placeholder="Workout Title"
+                            className="w-full rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 mb-3 text-[#EDF2F4] text-center placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                        />
+
+                        {/* Exercise Form */}
+                        <div className="mb-4 bg-[#8D99AE] p-4 rounded-xl shadow-xl">
+                            <input
+                                type="text"
+                                name="name"
+                                value={currentExercise.name}
+                                onChange={handleExerciseChange}
+                                placeholder="Exercise Name"
+                                className="w-full rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 mb-3 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                            />
+                            <input
+                                type="text"
+                                name="musclegroup"
+                                value={currentExercise.musclegroup}
+                                onChange={handleExerciseChange}
+                                placeholder="Muscle Group"
+                                className="w-full rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 mb-3 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                            />
+                            <input
+                                type="text"
+                                name="description"
+                                value={currentExercise.description}
+                                onChange={handleExerciseChange}
+                                placeholder="Description"
+                                className="w-full rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 mb-3 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                            />
+
+                            {/* Sets Form */}
+                            <div className="flex gap-2 mb-2">
+                                <input
+                                    type="number"
+                                    name="weight"
+                                    value={currentSet.weight}
+                                    onChange={handleSetChange}
+                                    placeholder="Weight"
+                                    className="w-45 rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 mb-3 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                                />
+                                <input
+                                    type="number"
+                                    name="reps"
+                                    value={currentSet.reps}
+                                    onChange={handleSetChange}
+                                    placeholder="Reps"
+                                    className="w-45 rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 mb-3 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                                />
+                                <button type="button" onClick={addSet} className="bg-[#EF233C] text-white px-2 py-2 mx-auto mb-3 rounded-full transition hover:bg-[#D90429]">
+                                    <FaPlus />
+                                </button>
+                            </div>
+
+                            {/* Current sets */}
+                            <ul className="mb-2">
+                                {currentExercise.sets.map((s, i) => (
+                                <li key={i}>{s.weight} kg × {s.reps} reps</li>
+                                ))}
+                            </ul>
+
+                            <button type="button" onClick={addExercise} className="bg-[#EF233C] w-full text-white px-4 py-2 rounded transition hover:bg-[#D90429]">
+                                Add Exercise
+                            </button>
+                        </div>
+
+                        {/* Exercises List */}
+                        <div>
+                            {exercises.map((ex, i) => (
+                            <div key={i} className="bg-[#8D99AE] p-2 rounded mb-2 text-center shadow-lg">
+                                <h4 className="font-bold text-[#EF233C]">{ex.name}</h4>
+                                <p className="text-[#EDF2F4]">{ex.musclegroup} — {ex.description}</p>
+                                <ul>
+                                    {ex.sets.map((s, idx) => (
+                                    <li className="text-[#2B2D42]"key={idx}> - {s.weight} kg × {s.reps} reps</li>
+                                    ))}
+                                </ul>
+                            </div>
+                            ))}
+                        </div>
+
+                        <button onClick={onSubmit} className="w-full bg-[#EF233C] text-white py-2 rounded mt-4 transition hover:bg-[#D90429]">
+                            End Workout
+                        </button>
+                    </>
+                    )}
+                </div>
+            </section>
+        </section>
     )
 };
 
-// Export NewWorkout
+// Export
 export default NewWorkout;
