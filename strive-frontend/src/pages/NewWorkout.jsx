@@ -1,14 +1,33 @@
 // NewWorkout
 
 // Imports
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '../components/Header.jsx';
+import WorkoutItem from '../components/WorkoutItem.jsx';
 import { FaPlus } from 'react-icons/fa';
-import { createWorkout, reset } from '../features/workouts/workoutsSlice.js';
-import { useDispatch } from 'react-redux';
+import { createWorkout, getWorkouts, reset } from '../features/workouts/workoutsSlice.js';
+import { useDispatch, useSelector } from 'react-redux';
 
 //New Workout
 const NewWorkout = () => {
+    // Get current user
+    const storedUser = localStorage.getItem("user");
+    const user = storedUser ? JSON.parse(storedUser) : null;
+
+    // Get most recent workout
+    const { workouts } = useSelector((state) => state.workout);
+    const lastWorkout = workouts.length > 0 ? workouts[workouts.length - 1] : null;
+
+    // Taglines
+    const taglines = [
+        "Consistency builds strength",
+        "One more rep, one step closer",
+        "No excuses, just results",
+        "Push your limits",
+        "Strive for progress, not perfection"
+    ];
+    const [tagline, setTagline] = useState('');
+
     // Initialise dispatch
     const dispatch = useDispatch();
 
@@ -81,15 +100,51 @@ const NewWorkout = () => {
         setStartTime(Date.now());
     };
 
+    useEffect(() => {
+        dispatch(getWorkouts());
+
+        // Cycle through taglines
+        let index = 0;
+        setTagline(taglines[index]);
+        const interval = setInterval(() => {
+            index = (index + 1) % taglines.length;
+            setTagline(taglines[index]);
+        }, 4000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <section className="bg-[#2B2D42] min-h-screen flex flex-col items-center justify-center">
             <Header />
             <section>
-                <div className="p-4 max-w-lg mx-auto mt-25 bg-[#8D99AE] shadow rounded-2xl mt-10">
+                {!started && (
+                    <div>
+                        <div className="text-6xl text-[#EDF2F4]">
+                            <h1>Welcome back, <span className="text-[#EF233C]">{user.username}</span></h1>
+                            <p className="text-lg italic text-[#EDF2F4] text-center mb-6 transition-opacity duration-500">
+                                {tagline}
+                            </p>
+                        </div>
+                        {lastWorkout && (
+                        <div>
+                            <h2 className="text-[#EDF2F4] text-center text-xl mt-10">Last Session</h2>
+                            <WorkoutItem workout={lastWorkout} />
+                        </div>
+                        )}
+                    </div>
+                )}
+
+                <div className="p-4 max-w-lg mx-auto mt-10 bg-[#8D99AE] shadow rounded-2xl mt-20">
                     {!started ? (
-                    <button onClick={startWorkout} className="w-full bg-[#EF233C] text-[#EDF2F4] py-2 px-4 rounded-xl hover:bg-[#D90429]">
-                        Start Workout
-                    </button>
+                        <>
+                            <h2 className="text-[#EDF2F4] text-xl text-center mb-3">
+                                Ready to train?
+                            </h2>
+                            <button onClick={startWorkout} className="w-full bg-[#EF233C] text-[#EDF2F4] py-2 px-4 rounded-xl hover:bg-[#D90429]">
+                                Start Workout
+                            </button>
+                        </>
                     ) : (
                     <>
                         <h1 className="new-workout text-3xl text-center text-[#EDF2F4] mb-5">
@@ -168,7 +223,7 @@ const NewWorkout = () => {
                         {/* Exercises List */}
                         <div>
                             {exercises.map((ex, i) => (
-                            <div key={i} className="bg-[#8D99AE] p-2 rounded mb-2 text-center shadow-lg">
+                            <div key={i} className="bg-[#8D99AE] p-2 rounded-lg mb-2 text-center shadow-lg">
                                 <h4 className="font-bold text-[#EF233C]">{ex.name}</h4>
                                 <p className="text-[#EDF2F4]">{ex.musclegroup} — {ex.description}</p>
                                 <ul>
