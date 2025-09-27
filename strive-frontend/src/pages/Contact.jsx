@@ -9,8 +9,8 @@ const Contact = () => {
     return (
         <>
             <Header />
-            <div>
-                <h1>Contact</h1>
+            <div className="min-h-screen bg-[#2B2D42] mt-15">
+                <h1 className="text-[#EDF2F4] text-center text-3xl pt-20">Contact Form coming Soon...</h1>
             </div>
         </>
     )
