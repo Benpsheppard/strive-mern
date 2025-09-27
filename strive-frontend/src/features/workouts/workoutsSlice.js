@@ -107,8 +107,9 @@ export const workoutsSlice = createSlice({
       .addCase(deleteWorkout.fulfilled, (state, action) => {
         state.isLoading = false
         state.isSuccess = true
+        const id = action.meta.arg;
         state.workouts = state.workouts.filter(
-          (workout) => workout._id !== action.payload.id
+          (workout) => workout._id !== id
         )
       })
       .addCase(deleteWorkout.rejected, (state, action) => {
