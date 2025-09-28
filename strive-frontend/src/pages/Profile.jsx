@@ -6,16 +6,23 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout, reset } from '../features/auth/authSlice.js';
 import Header from '../components/Header.jsx';
 import { FaUser } from 'react-icons/fa';
+import Spinner from '../components/Spinner.jsx';
 
 const Profile = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { user } = useSelector((state) => state.auth);
+    const { user, isLoading } = useSelector((state) => state.auth);
 
     const onLogout = () => {
         dispatch(logout());
         dispatch(reset());
         navigate('/');
+    }
+
+    if(isLoading){
+        return (
+            <Spinner />
+        )
     }
 
     return (

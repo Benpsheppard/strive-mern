@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import Header from '../components/Header.jsx';
 import WorkoutItem from '../components/WorkoutItem.jsx';
+import Spinner from '../components/Spinner.jsx';
 import { FaPlus } from 'react-icons/fa';
 import { createWorkout, getWorkouts, reset } from '../features/workouts/workoutsSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,7 +16,7 @@ const NewWorkout = () => {
     const user = storedUser ? JSON.parse(storedUser) : null;
 
     // Get most recent workout
-    const { workouts } = useSelector((state) => state.workout);
+    const { workouts, isLoading } = useSelector((state) => state.workout);
     const lastWorkout = workouts.length > 0 ? workouts[workouts.length - 1] : null;
 
     // Taglines
@@ -113,6 +114,12 @@ const NewWorkout = () => {
 
         return () => clearInterval(interval);
     }, []);
+
+    if(isLoading){
+        return (
+            <Spinner />
+        )
+    }
 
     return (
         <section className="bg-[#2B2D42] min-h-screen flex flex-col items-center justify-center">

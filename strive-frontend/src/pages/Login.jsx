@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { login, reset } from '../features/auth/authSlice.js';
+import Spinner from '../components/Spinner.jsx';
 
 // Login
 const Login = () => {
@@ -62,6 +63,11 @@ const Login = () => {
         dispatch(login(userData));
     }
 
+    if(isLoading){
+        return (
+            <Spinner />
+        )
+    }
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-[#2B2D42] px-4">

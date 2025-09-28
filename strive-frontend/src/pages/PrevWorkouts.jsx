@@ -4,6 +4,7 @@
 // Imports 
 import Header from '../components/Header.jsx';  // Import header
 import WorkoutItem from '../components/WorkoutItem.jsx';    // Import workout items
+import Spinner from '../components/Spinner.jsx' // Import spinner
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
@@ -17,7 +18,7 @@ const PrevWorkouts = () => {
     const dispatch = useDispatch();
 
     const { user } = useSelector((state) => state.auth);
-    const { workouts, isError, message } = useSelector((state) => state.workout);
+    const { workouts, isLoading, isError, message } = useSelector((state) => state.workout);
 
     useEffect(() => {
         if (isError) {
@@ -35,6 +36,12 @@ const PrevWorkouts = () => {
         }
 
     }, [user, isError, message, navigate, dispatch]);
+
+    if(isLoading){
+        return (
+            <Spinner />
+        )
+    }
 
     return (
         <section className="bg-[#2B2D42] min-h-screen flex flex-col items-center justify-center">

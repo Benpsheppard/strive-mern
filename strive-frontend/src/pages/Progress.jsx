@@ -3,9 +3,19 @@
 
 // Imports
 import Header from '../components/Header.jsx';  // Import header component
+import Spinner from '../components/Spinner.jsx';
+import { useSelector } from 'react-redux';
 
-// Progress
+
 const Progress = () => {
+    const { isLoading } = useSelector((state) => state.auth);
+
+    if(isLoading){
+        return (
+            <Spinner />
+        )
+    }
+    
     return (
         <>
             <Header />

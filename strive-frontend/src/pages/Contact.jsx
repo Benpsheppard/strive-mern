@@ -2,10 +2,19 @@
 // File to hold Contact page layout and functionality
 
 // Imports
+import { useSelector } from 'react-redux';
 import Header from '../components/Header.jsx';  // Import header component
 
 // Contact
 const Contact = () => {
+    const { isLoading } = useSelector((state) => state.auth);
+
+    if(isLoading){
+        return (
+            <Spinner />
+        )
+    }
+    
     return (
         <>
             <Header />
