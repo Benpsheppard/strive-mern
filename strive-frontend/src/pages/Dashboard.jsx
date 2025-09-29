@@ -6,6 +6,7 @@ import Header from '../components/Header.jsx';  // Import header component
 import Hero from '../components/Hero.jsx';  // Import hero component
 import About from '../components/About.jsx';    // Import about component
 import Features from '../components/Features.jsx';  // Import Features component
+import Footer from '../components/Footer.jsx';
 import Spinner from '../components/Spinner.jsx';
 import { useSelector } from 'react-redux';
 
@@ -25,6 +26,7 @@ const Dashboard = () => {
             <Hero />
             <About />
             <Features />
+            <Footer />
         </>
     )
 };

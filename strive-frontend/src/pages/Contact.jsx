@@ -4,6 +4,7 @@
 // Imports
 import { useSelector } from 'react-redux';
 import Header from '../components/Header.jsx';  // Import header component
+import Footer from '../components/Footer.jsx';
 
 // Contact
 const Contact = () => {
@@ -21,6 +22,7 @@ const Contact = () => {
             <div className="min-h-screen bg-[#2B2D42] mt-15">
                 <h1 className="text-[#EDF2F4] text-center text-3xl pt-20">Contact Form coming Soon...</h1>
             </div>
+            <Footer />
         </>
     )
 };
