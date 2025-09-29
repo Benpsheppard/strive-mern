@@ -47,13 +47,13 @@ const PrevWorkouts = () => {
         <section className="bg-[#2B2D42] min-h-screen flex flex-col items-center justify-center">
             <Header />
             <section className="mt-15 text-6xl text-[#EDF2F4] text-center px-4 py-4">
-                <h1>Your Completed Workouts</h1>
+                <h1>Your Completed <span className="text-[#EF233C]">Workouts</span></h1>
             </section>
 
             <section className="workout-content">
                 {workouts.length > 0 ? 
                 (
-                    <div>
+                    <div className="w-screen">
                         {workouts.map((workout) => (
                             <WorkoutItem key={workout._id} workout={workout} />
                         ))}
