@@ -1,5 +1,3 @@
 node_modules/
+.vscode
 .env
-strive-plan.txt
-strive-step-by-step.txt
-page-colors.txt
