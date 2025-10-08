@@ -32,8 +32,9 @@ app.use('/api/users', userRouter);
 
 // Deployment configuration
 if (process.env.NODE_ENV === 'production') {
+    console.log("Production mode");
     app.use(express.static(path.join(__dirname, '/strive-frontend/dist')));
-    app.get('*', (req, res) => {
+    app.use((req, res) => {
         res.sendFile(path.resolve(__dirname, 'strive-frontend', 'dist', 'index.html'));
     })
 }
