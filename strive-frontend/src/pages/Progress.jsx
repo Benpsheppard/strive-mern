@@ -64,7 +64,7 @@ const Progress = () => {
         });
     });
 
-    if(isLoading){
+    if(isLoading || !user){
         return (
             <Spinner />
         )

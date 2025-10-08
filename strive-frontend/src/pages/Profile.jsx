@@ -19,7 +19,7 @@ const Profile = () => {
         navigate('/');
     }
 
-    if(isLoading){
+    if(isLoading || !user){
         return (
             <Spinner />
         )
