@@ -6,7 +6,7 @@ import Header from '../components/Header.jsx';
 import WorkoutItem from '../components/WorkoutItem.jsx';
 import Spinner from '../components/Spinner.jsx';
 import { FaPlus } from 'react-icons/fa';
-import { createWorkout, getWorkouts } from '../features/workouts/workoutsSlice.js';
+import { createWorkout, getWorkouts, reset } from '../features/workouts/workoutsSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
