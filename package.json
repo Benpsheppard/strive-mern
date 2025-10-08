@@ -7,7 +7,8 @@
     "start": "node strive-backend/server.js",
     "server": "node --watch strive-backend/server.js",
     "client": "npm run dev --prefix strive-frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "build": "npm install && npm install --prefix strive-frontend && npm run build --prefix strive-frontend"
   },
   "keywords": [],
   "author": "",
