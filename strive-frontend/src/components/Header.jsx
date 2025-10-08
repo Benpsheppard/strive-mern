@@ -1,9 +1,13 @@
 // Header.jsx
 
 // Imports
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react'; // for burger and close icons
 
 const Header = () => {
+    const [isOpen, setIsOpen] = useState(false);
+
     // Navigation options styling
     const navOps = "text-[#EDF2F4] hover:text-[#EF233C] inline-block transform transition duration-200 hover:scale-110";
 
@@ -22,42 +26,55 @@ const Header = () => {
                     </Link>
                 </div>
 
-                {/* Navbar */}
-                <nav>
+                {/* Desktop Navbar */}
+                <nav className="hidden md:block">
                     <ul className="flex space-x-6 text-lg">
-                        <li>
-                            <Link to="/new-workout" className={navOps}>
-                                New Workout
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/prev-workouts" className={navOps}>
-                                Previous Workouts
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/progress" className={navOps}>
-                                Progress
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/contact" className={navOps}>
-                                Contact
-                            </Link>
-                        </li>
+                        <li><Link to="/new-workout" className={navOps}>New Workout</Link></li>
+                        <li><Link to="/prev-workouts" className={navOps}>Previous Workouts</Link></li>
+                        <li><Link to="/progress" className={navOps}>Progress</Link></li>
+                        <li><Link to="/contact" className={navOps}>Contact</Link></li>
                         <li>
                             {user ? (
                                 <Link to='/profile' className="text-[#EF233C] hover:text-[#D90429] inline-block transform transition duration-200 hover:scale-110">
                                     {user.username}
                                 </Link>
                             ) : (
-                                <Link to='/login' className={navOps}>
-                                    Sign in
-                                </Link>)}
+                                <Link to='/login' className={navOps}>Sign in</Link>
+                            )}
                         </li>
                     </ul>
                 </nav>
+
+                {/* Mobile Burger Icon */}
+                <button
+                    className="md:hidden text-[#EDF2F4] hover:text-[#EF233C] transition"
+                    onClick={() => setIsOpen(!isOpen)}
+                    aria-label="Toggle menu"
+                >
+                    {isOpen ? <X size={28} /> : <Menu size={28} />}
+                </button>
             </div>
+
+            {/* Mobile Dropdown Menu */}
+            {isOpen && (
+                <nav className="md:hidden bg-[#2B2D42] border-t border-gray-700 px-6 py-4">
+                    <ul className="flex flex-col space-y-3 text-lg text-center">
+                        <li><Link to="/new-workout" onClick={() => setIsOpen(false)} className={navOps}>New Workout</Link></li>
+                        <li><Link to="/prev-workouts" onClick={() => setIsOpen(false)} className={navOps}>Previous Workouts</Link></li>
+                        <li><Link to="/progress" onClick={() => setIsOpen(false)} className={navOps}>Progress</Link></li>
+                        <li><Link to="/contact" onClick={() => setIsOpen(false)} className={navOps}>Contact</Link></li>
+                        <li>
+                            {user ? (
+                                <Link to='/profile' onClick={() => setIsOpen(false)} className="text-[#EF233C] hover:text-[#D90429] inline-block transform transition duration-200 hover:scale-110">
+                                    {user.username}
+                                </Link>
+                            ) : (
+                                <Link to='/login' onClick={() => setIsOpen(false)} className={navOps}>Sign in</Link>
+                            )}
+                        </li>
+                    </ul>
+                </nav>
+            )}
         </header>
     );
 };
