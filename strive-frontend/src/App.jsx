@@ -21,7 +21,7 @@ const App = () => {
   return (
     <>
       <Router>
-        <div className="container">
+        <div className="w-full min-h-screen bg-[#2B2D42]">
           <Routes>
             <Route path='/' element={<Dashboard />} />
             <Route path='/login' element={<Login />} />
