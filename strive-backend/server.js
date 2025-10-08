@@ -30,16 +30,16 @@ app.use('/api/workouts', workoutRouter);
 // User routes
 app.use('/api/users', userRouter);
 
-// Custom Error Handler initialisation
-app.use(errorHandler);
-
 // Deployment configuration
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '/strive-frontend/dist')));
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, 'strive-frontend', 'dist', 'index.html'));
+        res.sendFile(path.resolve(__dirname, 'strive-frontend', 'dist', 'index.html'));
     })
 }
+
+// Custom Error Handler initialisation
+app.use(errorHandler);
 
 // Port listener
 app.listen(port, () => {
