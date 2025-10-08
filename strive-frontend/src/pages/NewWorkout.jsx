@@ -13,8 +13,7 @@ import { useNavigate } from 'react-router-dom';
 //New Workout
 const NewWorkout = () => {
     // Get current user
-    const storedUser = localStorage.getItem("user");
-    const user = storedUser ? JSON.parse(storedUser) : null;
+    const { user } = useSelector((state) => state.auth);
 
     // Get most recent workout
     const { workouts, isLoading } = useSelector((state) => state.workout);
@@ -153,7 +152,7 @@ const NewWorkout = () => {
                     </div>
                 )}
 
-                <div className="p-4 max-w-lg mx-auto mt-10 bg-[#8D99AE] shadow rounded-2xl mt-20">
+                <div className="p-4 max-w-full sm:max-w-lg mx-4 sm:mx-auto mt-10 bg-[#8D99AE] shadow rounded-2xl mt-20">
                     {!started ? (
                         <>
                             <h2 className="text-[#EDF2F4] text-xl text-center mb-3">
@@ -165,7 +164,7 @@ const NewWorkout = () => {
                         </>
                     ) : (
                     <>
-                        <h1 className="new-workout text-3xl text-center text-[#EDF2F4] mb-5">
+                        <h1 className="new-workout text-2xl sm:text-3xl text-center text-[#EDF2F4] mb-5">
                              - New <span className="text-[#EF233C]">Workout</span> -
                         </h1>
                         <input
@@ -204,14 +203,14 @@ const NewWorkout = () => {
                             />
 
                             {/* Sets Form */}
-                            <div className="flex gap-2 mb-2">
+                            <div className="flex flex-col sm:flex-row gap-2 mb-2">
                                 <input
                                     type="number"
                                     name="weight"
                                     value={currentSet.weight}
                                     onChange={handleSetChange}
                                     placeholder="Weight"
-                                    className="w-45 rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 mb-3 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                                    className="flex-1 w-45 rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 mb-3 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
                                 />
                                 <input
                                     type="number"
@@ -219,9 +218,9 @@ const NewWorkout = () => {
                                     value={currentSet.reps}
                                     onChange={handleSetChange}
                                     placeholder="Reps"
-                                    className="w-45 rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 mb-3 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                                    className=" flex-1 w-45 rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 mb-3 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
                                 />
-                                <button type="button" onClick={addSet} className="bg-[#EF233C] text-white px-2 py-2 mx-auto mb-3 rounded-full transition hover:bg-[#D90429]">
+                                <button type="button" onClick={addSet} className="sm:w-auto w-full bg-[#EF233C] text-white px-2 py-2 mx-auto mb-3 rounded-full transition hover:bg-[#D90429]">
                                     <FaPlus />
                                 </button>
                             </div>
@@ -239,7 +238,7 @@ const NewWorkout = () => {
                         </div>
 
                         {/* Exercises List */}
-                        <div>
+                        <div className="max-h-64 overflow-y-auto mb-4">
                             {exercises.map((ex, i) => (
                             <div key={i} className="bg-[#8D99AE] p-2 rounded-lg mb-2 text-center shadow-lg">
                                 <h4 className="font-bold text-[#EF233C]">{ex.name}</h4>
