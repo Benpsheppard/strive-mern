@@ -6,8 +6,9 @@ import Header from '../components/Header.jsx';
 import WorkoutItem from '../components/WorkoutItem.jsx';
 import Spinner from '../components/Spinner.jsx';
 import { FaPlus } from 'react-icons/fa';
-import { createWorkout, getWorkouts, reset } from '../features/workouts/workoutsSlice.js';
+import { createWorkout, getWorkouts } from '../features/workouts/workoutsSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 //New Workout
 const NewWorkout = () => {
@@ -29,8 +30,9 @@ const NewWorkout = () => {
     ];
     const [tagline, setTagline] = useState('');
 
-    // Initialise dispatch
+    // Initialise navigate and dispatch
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     // Set initial state of input fields
     const [title, setTitle] = useState('');
@@ -102,6 +104,15 @@ const NewWorkout = () => {
     };
 
     useEffect(() => {
+        if (isError) {
+            console.log(message);
+        }
+
+        if (!user){
+            navigate('/login');
+            return;
+        }
+
         dispatch(getWorkouts());
 
         // Cycle through taglines
@@ -113,7 +124,7 @@ const NewWorkout = () => {
         }, 4000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [user, navigate, dispatch]);
 
     if(isLoading){
         return (

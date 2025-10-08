@@ -24,6 +24,7 @@ const Progress = () => {
 
         if (!user){
             navigate('/login');
+            return;
         }
 
         dispatch(getWorkouts());

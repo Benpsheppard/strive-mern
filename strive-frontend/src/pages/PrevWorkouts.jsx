@@ -27,6 +27,7 @@ const PrevWorkouts = () => {
 
         if (!user){
             navigate('/login');
+            return;
         }
 
         dispatch(getWorkouts());
