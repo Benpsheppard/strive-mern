@@ -1,6 +1,7 @@
 // Profile.jsx
 
 // Imports
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout, reset } from '../features/auth/authSlice.js';
@@ -11,13 +12,29 @@ import Spinner from '../components/Spinner.jsx';
 const Profile = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { user, isLoading } = useSelector((state) => state.auth);
+    const { user, isLoading, isError, message } = useSelector((state) => state.auth);
 
     const onLogout = () => {
         dispatch(logout());
         dispatch(reset());
         navigate('/');
     }
+
+    useEffect(() => {
+            if (isError) {
+                console.log(message);
+            }
+    
+            if (!user){
+                navigate('/login');
+                return;
+            }
+        
+            return () => {
+                dispatch(reset());
+            }
+    
+        }, [user, isError, message, navigate, dispatch]);
 
     if(isLoading || !user){
         return (
