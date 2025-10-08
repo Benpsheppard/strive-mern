@@ -2,10 +2,11 @@
 // File to run server for Strive
 
 // Imports
+const express = require('express');                                     // import express
 const dotenv = require('dotenv').config();                              // allow reading of .env file
 const colors = require('colors');                                       // import colors for CLI aesthetics
+const path = require('path');                                           // import path module
 const connectDB = require('./config/db.js');                            // import database configuration file
-const express = require('express');                                     // import express
 const { workoutRouter } = require('./routes/workoutRoutes.js');         // import workout routes
 const { userRouter } = require('./routes/userRoutes.js');            // import user routes
 const { errorHandler } = require('./middleware/errorMiddleware.js');    // import error handler middleware
@@ -31,6 +32,14 @@ app.use('/api/users', userRouter);
 
 // Custom Error Handler initialisation
 app.use(errorHandler);
+
+// Deployment configuration
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static(path.join(__dirname, '/strive-frontend/dist')));
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'strive-frontend', 'dist', 'index.html'));
+    })
+}
 
 // Port listener
 app.listen(port, () => {
