@@ -16,7 +16,7 @@ const NewWorkout = () => {
     const { user } = useSelector((state) => state.auth);
 
     // Get most recent workout
-    const { workouts, isLoading } = useSelector((state) => state.workout);
+    const { workouts, isLoading, isError } = useSelector((state) => state.workout);
     const lastWorkout = workouts.length > 0 ? workouts[workouts.length - 1] : null;
 
     // Taglines
