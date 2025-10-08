@@ -36,7 +36,7 @@ app.use(errorHandler);
 // Deployment configuration
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, '/strive-frontend/dist')));
-    app.get('*', (req, res) => {
+    app.get('/:catchAll(*)', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'strive-frontend', 'dist', 'index.html'));
     })
 }
