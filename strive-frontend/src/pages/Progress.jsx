@@ -2,13 +2,16 @@
 // File to hold Progress page layout and functionality
 
 // Imports
-import Header from '../components/Header.jsx';  // Import header component
-import Spinner from '../components/Spinner.jsx';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getWorkouts, reset } from '../features/workouts/workoutsSlice.js';
-
+import Header from '../components/Header.jsx';
+import Spinner from '../components/Spinner.jsx';
+import PBChart from '../components/PBChart.jsx';
+import ProgressCard from '../components/ProgressCard.jsx';
+import MobileProgressCard from '../components/CondensedProgressCard.jsx';
+import ExerciseProgressChart from '../components/ExerciseProgressChart.jsx';
 
 const Progress = () => {
     const navigate = useNavigate();
@@ -70,8 +73,6 @@ const Progress = () => {
         )
     }
 
-    const progressCard = "bg-[#8D99AE] p-6 rounded-2xl shadow-lg text-center transform transition-transform duration-300 hover:scale-105";
-
     return (
         <>
             <Header />
@@ -81,38 +82,31 @@ const Progress = () => {
                 </h1>
 
                 {/* Summary grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {/* Card */}
-                    <div className={progressCard}>
-                        <h2 className="text-[#EDF2F4] text-xl">Total Workouts</h2>
-                        <p className="text-[#EF233C] text-2xl font-bold">{totalWorkouts}</p>
-                    </div>
-
-                    <div className={progressCard}>
-                        <h2 className="text-[#EDF2F4] text-xl">Total Exercises</h2>
-                        <p className="text-[#EF233C] text-2xl font-bold">{totalExercises}</p>
-                    </div>
-
-                    <div className={progressCard}>
-                        <h2 className="text-[#EDF2F4] text-xl">Total Duration</h2>
-                        <p className="text-[#EF233C] text-2xl font-bold">{totalDuration} min</p>
-                    </div>
-
-                    <div className={progressCard}>
-                        <h2 className="text-[#EDF2F4] text-xl">Total Sets</h2>
-                        <p className="text-[#EF233C] text-2xl font-bold">{totalSets} min</p>
-                    </div>
-
-                    <div className={progressCard}>
-                        <h2 className="text-[#EDF2F4] text-xl">Total Weight Lifted</h2>
-                        <p className="text-[#EF233C] text-2xl font-bold">{totalWeight} kg</p>
-                    </div>
-
-                    <div className={progressCard}>
-                        <h2 className="text-[#EDF2F4] text-xl">Total Reps</h2>
-                        <p className="text-[#EF233C] text-2xl font-bold">{totalReps}</p>
-                    </div>
+                <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+                <ProgressCard title="Total Workouts" value={totalWorkouts} />
+                <ProgressCard title="Total Exercises" value={totalExercises} />
+                <ProgressCard title="Total Duration" value={`${totalDuration} min`} />
+                <ProgressCard title="Total Sets" value={totalSets} />
+                <ProgressCard title="Total Weight Lifted" value={`${totalWeight} kg`} />
+                <ProgressCard title="Total Reps" value={totalReps} />
                 </div>
+
+                {/* Mobile Summary card */}
+                <MobileProgressCard
+                    totalWorkouts={totalWorkouts}
+                    totalExercises={totalExercises}
+                    totalDuration={totalDuration}
+                    totalSets={totalSets}
+                    totalWeight={totalWeight}
+                    totalReps={totalReps}
+                />
+                
+                {/* Charts Section */}
+                <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <PBChart workouts={workouts} />
+                    <ExerciseProgressChart workouts={workouts} />
+                </div>
+
             </div>
         </>
     )
