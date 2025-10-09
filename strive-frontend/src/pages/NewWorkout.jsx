@@ -2,13 +2,14 @@
 
 // Imports
 import { useState, useEffect } from 'react';
-import Header from '../components/Header.jsx';
-import WorkoutItem from '../components/WorkoutItem.jsx';
-import Spinner from '../components/Spinner.jsx';
 import { FaPlus } from 'react-icons/fa';
 import { createWorkout, getWorkouts, reset } from '../features/workouts/workoutsSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header.jsx';
+import WorkoutItem from '../components/WorkoutItem.jsx';
+import Spinner from '../components/Spinner.jsx';
+import SetList from '../components/SetList.jsx';
 
 //New Workout
 const NewWorkout = () => {
@@ -135,9 +136,9 @@ const NewWorkout = () => {
     }
 
     return (
-        <section className="bg-[#2B2D42] min-h-screen flex flex-col items-center justify-center">
+        <section className="bg-[#2B2D42] mt-15 min-h-screen flex flex-col items-center justify-start overflow-x-hidden">
             <Header />
-            <section>
+            <section className="w-full px-4 sm:px-0 flex flex-col items-center mt-6">
                 {!started && (
                     <div>
                         <div className="text-6xl text-[#EDF2F4]">
@@ -155,16 +156,16 @@ const NewWorkout = () => {
                     </div>
                 )}
 
-                <div className="p-4 max-w-full sm:max-w-lg mx-4 sm:mx-auto mt-10 bg-[#8D99AE] shadow rounded-2xl mt-20">
+                <div className="p-6 w-full sm:max-w-2xl mx-auto mt-10 bg-[#8D99AE] shadow rounded-2xl">
                     {!started ? (
-                        <>
+                        <div>
                             <h2 className="text-[#EDF2F4] text-xl text-center mb-3">
                                 Ready to train?
                             </h2>
                             <button onClick={startWorkout} className="w-full bg-[#EF233C] text-[#EDF2F4] py-2 px-4 rounded-xl hover:bg-[#D90429]">
                                 Start Workout
                             </button>
-                        </>
+                        </div>
                     ) : (
                     <>
                         <h1 className="new-workout text-2xl sm:text-3xl text-center text-[#EDF2F4] mb-5">
@@ -206,35 +207,42 @@ const NewWorkout = () => {
                             />
 
                             {/* Sets Form */}
-                            <div className="flex flex-col sm:flex-row gap-2 mb-2">
-                                <input
-                                    type="number"
-                                    name="weight"
-                                    value={currentSet.weight}
-                                    onChange={handleSetChange}
-                                    placeholder="Weight"
-                                    className="flex-1 w-45 rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 mb-3 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
-                                />
-                                <input
-                                    type="number"
-                                    name="reps"
-                                    value={currentSet.reps}
-                                    onChange={handleSetChange}
-                                    placeholder="Reps"
-                                    className=" flex-1 w-45 rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 mb-3 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
-                                />
-                                <button type="button" onClick={addSet} className="sm:w-auto w-full bg-[#EF233C] text-white px-2 py-2 mx-auto mb-3 rounded-full transition hover:bg-[#D90429]">
-                                    <FaPlus />
+                            <div className="flex flex-col gap-2 mb-3 w-full">
+                                {/* Inputs row */}
+                                <div className="flex items-center gap-2 w-full">
+                                    <input
+                                        type="number"
+                                        name="weight"
+                                        value={currentSet.weight}
+                                        onChange={handleSetChange}
+                                        placeholder="Weight"
+                                        className="flex-1 min-w-0 rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-3 py-2 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                                    />
+                                    <input
+                                        type="number"
+                                        name="reps"
+                                        value={currentSet.reps}
+                                        onChange={handleSetChange}
+                                        placeholder="Reps"
+                                        className="flex-1 min-w-0 rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-3 py-2 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                                    />
+
+                                    {/* Desktop + Button */}
+                                    <button type="button" onClick={addSet} className="hidden sm:flex w-10 h-10 items-center justify-center bg-[#EF233C] text-white rounded-lg transition hover:bg-[#D90429]">
+                                        <FaPlus />
+                                    </button>
+                                </div>
+
+                                {/* Mobile Add Set Button */}
+                                <button type="button" onClick={addSet} className="sm:hidden w-full bg-[#EF233C] text-white py-2 rounded transition hover:bg-[#D90429]">
+                                    Add Set
                                 </button>
                             </div>
 
-                            {/* Current sets */}
-                            <ul className="mb-2">
-                                {currentExercise.sets.map((s, i) => (
-                                <li key={i}>{s.weight} kg × {s.reps} reps</li>
-                                ))}
-                            </ul>
+                            {/* Sets List */}
+                            <SetList sets={currentExercise.sets} />
 
+                            {/* Add Exercise */}
                             <button type="button" onClick={addExercise} className="bg-[#EF233C] w-full text-white px-4 py-2 rounded transition hover:bg-[#D90429]">
                                 Add Exercise
                             </button>
@@ -254,7 +262,8 @@ const NewWorkout = () => {
                             </div>
                             ))}
                         </div>
-
+                        
+                        {/* Submit Workout */}
                         <button onClick={onSubmit} className="w-full bg-[#EF233C] text-white py-2 rounded mt-4 transition hover:bg-[#D90429]">
                             End Workout
                         </button>
