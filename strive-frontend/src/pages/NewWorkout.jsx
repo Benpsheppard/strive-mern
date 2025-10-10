@@ -11,6 +11,25 @@ import WorkoutItem from '../components/WorkoutItem.jsx';
 import Spinner from '../components/Spinner.jsx';
 import SetList from '../components/SetList.jsx';
 
+export function useLocalStorage(key, initialValue) {
+  const [value, setValue] = useState(() => {
+    try {
+      const jsonValue = localStorage.getItem(key);
+      return jsonValue != null ? JSON.parse(jsonValue) : initialValue;
+    } catch {
+      return initialValue;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch {}
+  }, [key, value]);
+
+  return [value, setValue];
+}
+
 //New Workout
 const NewWorkout = () => {
     // Get current user
@@ -35,17 +54,18 @@ const NewWorkout = () => {
     const navigate = useNavigate();
 
     // Set initial state of input fields
-    const [title, setTitle] = useState('');
-    const [exercises, setExercises] = useState([]);
-    const [currentExercise, setCurrentExercise] = useState({
+    const [title, setTitle] = useLocalStorage('newWorkout_title', '');
+    const [exercises, setExercises] = useLocalStorage('newWorkout_exercises', []);
+    const [currentExercise, setCurrentExercise] = useLocalStorage('newWorkout_currentExercise', {
         name: '',
         musclegroup: '',
         description: '',
         sets: []
     });
-    const [currentSet, setCurrentSet] = useState({ weight: '', reps: '' });
-    const [started, setStarted] = useState(false);
-    const [startTime, setStartTime] = useState(null);
+    const [currentSet, setCurrentSet] = useLocalStorage('newWorkout_currentSet', { weight: '', reps: '' });
+    const [started, setStarted] = useLocalStorage('newWorkout_started', false);
+    const [startTime, setStartTime] = useLocalStorage('newWorkout_startTime', null);
+
 
     // Change input for exercise fields
     const handleExerciseChange = (e) => {
@@ -95,6 +115,14 @@ const NewWorkout = () => {
         setCurrentSet({ weight: '', reps: '' });
         setStarted(false);
         setStartTime(null);
+
+        // Clear from localStorage manually (optional safety)
+        localStorage.removeItem('newWorkout_title');
+        localStorage.removeItem('newWorkout_exercises');
+        localStorage.removeItem('newWorkout_currentExercise');
+        localStorage.removeItem('newWorkout_currentSet');
+        localStorage.removeItem('newWorkout_started');
+        localStorage.removeItem('newWorkout_startTime');
     };
 
     // Start workout
