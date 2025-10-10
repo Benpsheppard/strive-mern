@@ -26,7 +26,7 @@ const Profile = () => {
             }
     
             if (!user){
-                navigate('/');
+                navigate('/login');
                 return;
             }
         
