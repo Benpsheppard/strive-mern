@@ -8,7 +8,7 @@ const About = () => {
                 </h2>
                 <div className="space-y-8 text-lg text-[#8D99AE]">
                     <p className="consistent">
-                        Helping Users <span className="text-[#EF233C]">stay consistent</span>, even when motivation is low
+                        Helping you <span className="text-[#EF233C]">stay consistent</span>, even when motivation is low
                     </p>
                     <p className="track">
                         Track your progress from <span className="text-[#EF233C]">your first to your hundredth</span> workout
