@@ -1,6 +1,6 @@
-# Strive - MERN
-Strive is a Gym Tracker App. Create, log and review personalised workouts - built using the MERN stack
-Now deployed on Render! Visit https://strive-ei2e.onrender.com/ to begin tracking your workouts
+# Strive - Now deployed on Render!
+- Strive is a Gym Tracker App. Create, log and review personalised workouts - built using the MERN stack
+- Now deployed on Render! Visit https://strive-ei2e.onrender.com/ to begin tracking your workouts
 
 ## Features
 - Login / Register with MongoDB persistance and JWT authentication
