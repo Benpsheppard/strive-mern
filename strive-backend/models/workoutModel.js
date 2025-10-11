@@ -5,7 +5,7 @@
 const mongoose = require('mongoose');   // import mongoose
 
 // Exercise Schema
-const exercisesSchema = mongoose.Schema({
+const exerciseSchema = mongoose.Schema({
     // Name
     name: {
         type: String,
@@ -60,7 +60,7 @@ const workoutSchema = mongoose.Schema({
         required: [true, 'Timer error']
     },
     // Exercises
-    exercises: [exercisesSchema]
+    exercises: [exerciseSchema]
 }, {
     timestamps: true
 });
