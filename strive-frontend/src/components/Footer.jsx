@@ -14,7 +14,7 @@ const Footer = () => {
                 </div>
             </div>
             <div className="text-center text-xs text-gray-500 mt-4">
-                © 2025 Strive. All rights reserved. | v1.0.0
+                © 2025 Strive. All rights reserved.
             </div>
         </footer>
     )
