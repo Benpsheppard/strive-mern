@@ -35,6 +35,11 @@ const setWorkout = asyncHandler(async (req, res) => {
         exercises: req.body.exercises
     })
 
+    await User.findByIdAndUpdate(
+        req.user.id,
+        { $push: { workouts: workout._id } }
+    );
+
     // Output new workout
     res.status(201).json(workout);
 })
@@ -71,8 +76,8 @@ const updateWorkout = asyncHandler(async (req, res) => {
     res.status(200).json(updatedWorkout);
 })
 
-// @desc    Get workouts
-// @route   DELETE /api/workouts
+// @desc    Delete a workout
+// @route   DELETE /api/workouts/:id
 // @access  Private
 const deleteWorkout = asyncHandler(async (req, res) => {
     // Find workout with given id
@@ -99,6 +104,12 @@ const deleteWorkout = asyncHandler(async (req, res) => {
     // Delete workout with given id
     await workout.deleteOne();
 
+    // Remove workout from user's workouts array
+    await User.findByIdAndUpdate(
+        req.user.id,
+        { $pull: { workouts: workout._id } }
+    );
+
     res.status(200).json(`The workout with id: ${req.params.id} was deleted`);
 })
 
@@ -118,6 +129,17 @@ const addExercise = asyncHandler(async (req, res) => {
     if (!req.user || workout.user.toString() !== req.user.id) {
         res.status(401);
         throw new Error('User not authorised');
+    }
+
+    // Validate input fields
+    if (!req.body.name || req.body.name.trim() === '') {
+        res.status(400);
+        throw new Error('Exercise name is required');
+    }
+
+    if (!req.body.musclegroup || req.body.musclegroup.trim() === '') {
+        res.status(400);
+        throw new Error('Muscle group is required');
     }
 
     // Build new exercise
