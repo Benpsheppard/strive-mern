@@ -1,21 +1,17 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { deleteWorkout, getWorkouts } from '../features/workouts/workoutsSlice.js';
+import { deleteWorkout } from '../features/workouts/workoutsSlice.js';
 import { FaTimes } from 'react-icons/fa';
 
 const WorkoutItem = ({ workout }) => {
     const dispatch = useDispatch();
     const [expanded, setExpanded] = useState(false);
 
-    const handleDelete = () => {
-        if (window.confirm("Are you sure you want to delete this workout?")) {
-        dispatch(deleteWorkout(workout._id));
-        }
-    };
-
-    const handleExpand = (e) => {
+    const onDelete = (e) => {
         e.stopPropagation();
-        handleDelete();
+        if (window.confirm("Are you sure you want to delete this workout?")) {
+            dispatch(deleteWorkout(workout._id));
+        }
     };
 
     const exerciseCount = workout.exercises?.length || 0;
@@ -24,7 +20,7 @@ const WorkoutItem = ({ workout }) => {
         <div className={`relative bg-[#8D99AE] rounded-xl shadow-md p-4 mb-4 flex flex-col gap-2 max-w-200 mx-auto cursor-pointer transition-all duration-300 ${expanded ? "max-h-[600px]" : "max-h-[120px] overflow-hidden"}`}
             onClick={() => setExpanded(!expanded)}>
             {/* X delete button in top right */}
-            <button onClick={handleExpand} className="absolute top-2 right-2 text-[#EF233C] hover:text-[#D90429] text-lg font-bold" aria-label="Delete workout">
+            <button onClick={onDelete} className="absolute top-2 right-2 text-[#EF233C] hover:text-[#D90429] text-lg font-bold" aria-label="Delete workout">
                 <FaTimes />
             </button>
 
