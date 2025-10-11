@@ -49,6 +49,29 @@ const NewWorkout = () => {
     ];
     const [tagline, setTagline] = useState('');
 
+    // Muscle groups
+    const muscleGroups = [
+        'Chest',
+        'Back',
+        'Shoulders',
+        'Arms',
+        'Legs',
+        'Core',
+        'Full body',
+        'Other'
+    ];
+
+    // Normalize exercise input
+    const normaliseExercise = (name) => {
+        return name
+            .trim()
+            .replace(/\s+/g, ' ')
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    };
+
     // Initialise navigate and dispatch
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -96,12 +119,29 @@ const NewWorkout = () => {
     // Add exercise to workout
     const addExercise = () => {
         if (!currentExercise.name || currentExercise.sets.length === 0) return;
-        setExercises(prev => [...prev, currentExercise]);
+        
+        const normalizedExercise = {
+            ...currentExercise,
+            name: normaliseExercise(currentExercise.name)
+        };
+        
+        setExercises(prev => [...prev, normalizedExercise]);
         setCurrentExercise({ name: '', musclegroup: '', description: '', sets: [] });
     };
 
     // Submit workout
     const onSubmit = () => {
+        // Basic validation
+        if (!title.trim()) {
+            alert('Please enter a workout title.');
+            return;
+        }
+
+        if (exercises.length === 0) {
+            alert('Please add at least one exercise.');
+            return;
+        }
+
         const endTime = Date.now();
         const durationMinutes = Math.round((endTime - startTime) / 60000); // duration in minutes
 
@@ -116,7 +156,7 @@ const NewWorkout = () => {
         setStarted(false);
         setStartTime(null);
 
-        // Clear from localStorage manually (optional safety)
+        // Clear from localStorage manually
         localStorage.removeItem('newWorkout_title');
         localStorage.removeItem('newWorkout_exercises');
         localStorage.removeItem('newWorkout_currentExercise');
@@ -124,6 +164,20 @@ const NewWorkout = () => {
         localStorage.removeItem('newWorkout_started');
         localStorage.removeItem('newWorkout_startTime');
     };
+
+    const onCancel = () => {
+        if (window.confirm("Are you sure you want to delete this workout?")) {                
+            setStarted(false);
+
+            // Clear from localStorage manually
+            localStorage.removeItem('newWorkout_title');
+            localStorage.removeItem('newWorkout_exercises');
+            localStorage.removeItem('newWorkout_currentExercise');
+            localStorage.removeItem('newWorkout_currentSet');
+            localStorage.removeItem('newWorkout_started');
+            localStorage.removeItem('newWorkout_startTime');
+        }
+    }
 
     // Start workout
     const startWorkout = () => {
@@ -205,6 +259,7 @@ const NewWorkout = () => {
                             onChange={e => setTitle(e.target.value)}
                             placeholder="Workout Title"
                             className="w-full rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 mb-3 text-[#EDF2F4] text-center placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                            required
                         />
 
                         {/* Exercise Form */}
@@ -216,15 +271,21 @@ const NewWorkout = () => {
                                 onChange={handleExerciseChange}
                                 placeholder="Exercise Name"
                                 className="w-full rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 mb-3 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                                required
                             />
-                            <input
-                                type="text"
+                            <select
                                 name="musclegroup"
                                 value={currentExercise.musclegroup}
                                 onChange={handleExerciseChange}
-                                placeholder="Muscle Group"
-                                className="w-full rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 mb-3 text-[#EDF2F4] placeholder-gray-300 focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
-                            />
+                                className="w-full rounded-lg border border-[#EDF2F4]/40 bg-[#2B2D42] px-4 py-2 mb-3 text-[#EDF2F4] focus:border-[#EF233C] focus:outline-none focus:ring-2 focus:ring-[#EF233C]/40"
+                                required
+                            >
+                                <option value="" className='text-gray-300'>Select Muscle Group</option>
+                                {muscleGroups.map(group => (
+                                    <option key={group} value={group}>{group}</option>
+                                ))}
+                            </select>
+
                             <input
                                 type="text"
                                 name="description"
@@ -292,9 +353,16 @@ const NewWorkout = () => {
                         </div>
                         
                         {/* Submit Workout */}
-                        <button onClick={onSubmit} className="w-full bg-[#EF233C] text-white py-2 rounded mt-4 transition hover:bg-[#D90429]">
-                            End Workout
-                        </button>
+                        <div className="flex flex-col w-full items-center">
+                            <button onClick={onSubmit} className="w-full bg-[#EF233C] text-[#EDF2F4] py-2 rounded mt-4 transition hover:bg-[#D90429]">
+                                End Workout
+                            </button>
+
+                            <button onClick={onCancel} className="w-1/2 bg-[#8D99AE] text-[#EDF2F4] py-2 rounded mt-2 transition hover:bg-[#D90429]">
+                                Cancel Workout
+                            </button>
+                        </div>
+                       
                     </>
                     )}
                 </div>
