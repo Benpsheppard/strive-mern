@@ -1,3 +1,5 @@
+// PBChart.jsx
+import { useState } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,27 +15,38 @@ import { Bar } from 'react-chartjs-2';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const PBChart = ({ workouts }) => {
+    const muscleGroups = ['All', 'Chest', 'Back', 'Arms', 'Legs', 'Shoulders', 'Core', 'Full body', 'Other'];
+    const [selectedMuscleGroup, setSelectedMuscleGroup] = useState('All');
+
     const exercisePBs = {};
 
-    // Collect personal bests
+    // Collect personal bests with muscle group info
     workouts.forEach((workout) => {
         const workoutDate = workout.date || workout.createdAt || 'Unknown date';
 
         workout.exercises.forEach((exercise) => {
             const name = exercise.name;
+            const muscleGroup = exercise.musclegroup || 'Other';
+            
             exercise.sets.forEach((set) => {
                 const weight = Number(set.weight) || 0;
                 if (!exercisePBs[name] || weight > exercisePBs[name].weight) {
-                    exercisePBs[name] = { weight, date: workoutDate };
+                    exercisePBs[name] = { weight, date: workoutDate, muscleGroup };
                 }
             });
         });
     });
 
+    // Filter by selected muscle group
+    const filteredExercises = Object.entries(exercisePBs).filter(([name, data]) => {
+        if (selectedMuscleGroup === 'All') return true;
+        return data.muscleGroup === selectedMuscleGroup;
+    });
+
     // Prepare data for chart
-    const labels = Object.keys(exercisePBs);
-    const weights = labels.map((name) => exercisePBs[name].weight);
-    const dates = labels.map((name) => exercisePBs[name].date);
+    const labels = filteredExercises.map(([name]) => name);
+    const weights = filteredExercises.map(([, data]) => data.weight);
+    const dates = filteredExercises.map(([, data]) => data.date);
 
     // Chart data
     const data = {
@@ -83,7 +96,7 @@ const PBChart = ({ workouts }) => {
     };
 
     // Handle case with no exercises
-    if (labels.length === 0) {
+    if (Object.keys(exercisePBs).length === 0) {
         return (
         <div className="bg-[#8D99AE] p-6 rounded-2xl mt-10 text-center text-[#EDF2F4]">
             <p>No exercises found</p>
@@ -93,12 +106,33 @@ const PBChart = ({ workouts }) => {
 
     return (
         <div className="bg-[#8D99AE] p-6 rounded-2xl mt-10">
-            <h2 className="text-[#EDF2F4] text-2xl font-semibold mb-4 text-center">Personal Bests</h2>
-            <div className="h-[300px] md:h-[400px] relative">
-                <Bar data={data} options={options} />
+            <h2 className="text-[#EDF2F4] text-2xl font-semibold mb-4 text-center">
+                Personal Bests
+            </h2>
+
+            {/* Dropdown Menu */}
+            <select className="w-full bg-[#2B2D42] text-[#EDF2F4] p-2 rounded-lg mb-6 outline-none" value={selectedMuscleGroup} onChange={(e) => setSelectedMuscleGroup(e.target.value)}>
+                <option value="">Select a Muscle Group</option>
+                {muscleGroups.map((group) => (
+                    <option key={group} value={group}>
+                        {group}
+                    </option>
+                ))}
+            </select>
+
+            {/* Chart Area */}
+            <div className="relative h-[300px] md:h-[400px]">
+                {labels.length === 0 ? (
+                <div className="text-center text-[#EDF2F4] py-8">
+                    <p>No exercises found for {selectedMuscleGroup}</p>
+                </div>
+            ) : (
+                <div className="h-[300px] md:h-[400px] relative">
+                    <Bar data={data} options={options} />
+                </div>
+            )}
             </div>
         </div>
-
     );
 };
 
